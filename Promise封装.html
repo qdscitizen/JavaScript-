@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">		
+			class HD{
+				static pending = "pending"
+				static fullfilled = "fullfilled"
+				static reject = "reject"
+				constructor(executor) {
+				  this.value = null;
+					this.status = 'pending'
+					this.callbacks = []
+					executor(this.resolve.bind(this),this.reject.bind(this))
+				}
+				//promise.Resolve用法
+				static Resolve(val){
+					return new HD((resolve,reject)=>{			
+						if(val instanceof HD){
+							val.then(resolve,reject)
+						}else{
+							resolve(val)
+						}
+					})
+				}
+				//promise.Reject用法
+				static Reject(error){
+					return new HD((resolve,reject)=>{
+						if(val instanceof HD){
+							val.then(resolve,reject)
+						}else{
+							reject(val)
+						}
+					})
+				}
+				static All(promises){	
+					return new HD((resolve,reject)=>{
+						let resultArr = [];
+						promises.forEach(promise=>{
+							promise.then(res=>{
+								if(res){
+									resultArr.push(res)
+									if(resultArr.length===promises.length){
+										resolve(resultArr)
+									}
+								}
+							},err=>{
+								if(err){
+									reject(err)
+								}
+							})
+						})
+					})
+				}
+				static race(promises){
+					return new HD((resolve,reject)=>{
+						let resultArr = [];
+						promises.forEach(promise=>{
+							promise.then(res=>{
+								resolve(res)
+							},err=>{
+								if(err){
+									resultArr.push(err)
+									if(resultArr.length===promises.length){
+										reject(resultArr[0])
+									}
+								}						
+							})
+						})
+					})
+				}
+				resolve(val){
+					if(this.status === HD.pending){
+						setTimeout(()=>{
+							this.value = val
+							this.callbacks.forEach(callback=>{
+								callback.onResolve(this.value)
+							})
+							this.status = HD.fullfilled
+						},0)
+					}
+				}
+				reject(err){
+					if(this.status=== HD.pending){
+						this.value = err
+						this.callbacks.forEach(callback=>{
+							callback.onReject(this.value)
+						})
+						this.status = HD.reject
+					}
+				}
+				then(onResolve,onReject){
+				  let promise =  new HD((resolve,reject)=>{
+						if(onResolve && (this.status === HD.fullfilled)){
+							try{
+								onResolve(this.value)
+								resolve(this.value)
+							}catch(error){
+								onReject(error)
+							}					
+						}
+						if(onReject && (this.status === HD.reject)){
+							try{
+								onReject(this.value)
+								resolve(this.value)
+							}catch(error){
+								onReject(error)
+							}		
+							
+						}	
+						if(this.status === HD.pending){
+							this.callbacks.push({
+								onResolve:(value)=>{
+									try{		
+										let result = onResolve(value)
+										if(promise === result){
+											throw new TypeError("Chaining cycle detected for promise");
+										}else{
+											if(result instanceof HD){
+												//如果返回值是
+												result.then(resolve,reject)
+											}else{
+												//如果then有返回值，就放到resolve中传给下一个then
+												result && resolve(result)
+											}
+										}
+										
+									}catch(err){
+										onReject && onReject(err)
+									}								
+								},
+								onReject:error=>{
+									try{
+										let result = onReject(error)
+										if(promise == result){
+											throw new TypeError("Chaining cycle detected for promise");
+										}else{
+											if(result instanceof HD){
+												//如果返回值是
+												result.then(resolve,reject)
+											}else{
+												//如果then有返回值，就放到resolve中传给下一个then
+												result && reject(error)
+											}		
+										}										
+									}catch(err){
+										onReject && onReject(err)
+									}								
+								}
+							})
+						}			
+					})				
+					return promise
+				}
+			}
+			// let p = new HD((resolve,reject)=>{
+			// 	setTimeout(function(){
+			// 		resolve('范冰冰')
+			// 	},2000)			
+			// 	// reject('拒绝')
+			// }).then(res=>{
+			// 	console.log('我得到了resolve给我的值',res)
+			// 	return p
+			// 	// return new HD((resolve,reject)=>{
+			// 	// 	reject('杨幂')
+			// 	// })
+			// },err=>{
+			// 	console.log(err)
+			// }).then(res=>{console.log('我获取第一个then给我的返回值',res)},err=>{
+			// 	console.log(err)
+			// })
+			let one = new HD((resolve,reject)=>{
+				setTimeout(function(){
+					reject('我是第一个')
+				},1500)
+			})
+			let two = new HD((resolve,reject)=>{
+				setTimeout(function(){
+					reject('我是第二个')
+				},1000)
+			})
+			let three = new HD((resolve,reject)=>{
+				setTimeout(function(){
+					reject('我是第三个')
+				},2000)
+			})
+				
+			HD.race([one,two,three]).then(res=>{
+				console.log(res)
+			},err=>{
+				console.log(err)
+			})
+		</script>
+	</body>
+</html>

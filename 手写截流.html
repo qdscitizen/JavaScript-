@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			#app{
+				width:100%;
+				height:2000px;
+				background:red
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			
+		</div>
+	</body>
+	<script type="text/javascript">
+			
+		 function con(){
+			 console.log(document.documentElement.scrollTop)
+		 }
+		 //定时器方法
+	  //  function thottle(fn,delay){
+			//  let timer = false;
+			//  return function(){
+			// 	 if(!timer){
+			// 		  timer = setTimeout(function(){
+			// 			 fn()
+			// 			 timer = null
+			// 		 },delay)
+			// 	 }		
+			//  }
+		 // }
+		 
+		 //时间戳方法
+		 function thottle(fn,delay){
+			 //设置一个时间戳
+				let timeStamp = 0;
+				let context = this
+				return function(){
+				  if(new Date().valueOf() - timeStamp > delay){
+						fn.apply(context,arguments)
+						timeStamp = new Date().valueOf()
+					}
+				}
+		 }
+		 window.addEventListener('scroll',thottle(con,2000))
+		 
+		 
+	</script>
+</html>

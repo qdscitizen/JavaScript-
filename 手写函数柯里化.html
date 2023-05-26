@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+		 function klh(fn){
+			 const func = function(...args){
+				 if(fn.length === args.length){
+					 return  fn(...args)
+				 }else{
+					 return (...args1)=>{
+						 return func(...args,...args1)
+					 }
+				 }
+			 }
+			 return func
+		 }
+		 function fn1(a,b,c,d){
+			 return a+b+c+d
+		 }
+		 let currency = klh(fn1)
+		 console.log(currency(1)(2)(3)(4))
+	</script>
+</html>

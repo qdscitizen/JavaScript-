@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+		
+		 class Rain{
+			 constructor(arg) {
+				 //向下跑就是1
+				 //下雨吧
+				 this.createRain()
+			 }
+			 fall(rain){
+				 console.log(1,rain)
+				 // rain.style.top = 200 + "px"
+			 }
+			 getTop(){
+				 let body = document.documentElement.clientHeight
+				 let {y,height} = this.createRain().getBoundingClientRect()
+				 if(y+height > body){
+					 this.y = -1
+				 }
+				 return y +  this.y
+			 }
+			 createRain(){
+				let rain = document.createElement('div')
+				rain.style.width =50 +'px';
+				rain.style.height = 50 + 'px'   
+				rain.style.position = 'fixed'
+				rain.style.background = 'red'
+				rain.style.left=Math.random()* 1000 + "px"
+				document.body.appendChild(rain)
+				let body = document.documentElement.clientHeight				
+				console.log(rain.getBoundingClientRect())	
+				let point = 1;	
+				let count = 0;
+				let step = 1;
+				setInterval(()=>{	
+					let {y,height} = rain.getBoundingClientRect()			
+					if(y + height === body){
+						point = -1
+						++count
+						step <= 5 && ++step
+					}				
+					if(y + height <= (400 + count*10)){
+						point = 1
+						
+					}
+					if(count===3){
+						rain.style.top = body + "px"
+					}else{
+						rain.style.top = y + point * step + "px"
+					}
+					
+				},5/step)
+				
+				// setTimeout(function(){document.body.removeChild(rain)},5000)
+				
+			 }
+		 }
+			 let rains = new Rain();
+		</script>
+	</body>
+</html>

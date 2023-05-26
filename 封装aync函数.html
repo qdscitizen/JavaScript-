@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS动画left</title>
+  <style>
+   
+ 
+  </style>
+</head>
+<body>
+	<div class="container">
+   
+  </div>
+  <script type="text/javascript">
+	let pro1 = ()=>new Promise((resolve,reject)=>{
+		setTimeout(()=>{
+		 resolve("data1")
+		},1000)
+	})
+	let pro2 = ()=>new Promise((resolve,reject)=>{
+		setTimeout(()=>{
+		 resolve("data2")
+		},1000)
+	})
+	
+	function* testG(){
+		let result1 = yield pro1()
+		console.log('data1',result1)
+		let result2 = yield pro2()
+		console.log('data2',result2)
+		return "success"
+	}
+
+	function asyncFunc(fn){
+		let gen = fn()
+		let res
+	  return new Promise((resolve,reject)=>{
+			function step(val){
+				let res = gen.next(val)
+				let {value,done} = res
+				console.log(res)
+				if(done){
+					resolve(value)
+				}else{
+					res.value.then(res=>{
+						step(res)
+					})
+				}
+			}
+			step()
+		})
+	}
+	asyncFunc(testG).then(res=>{
+		console.log('我是最终结果',res)
+	})
+  </script>
+
+</body>
+</html>

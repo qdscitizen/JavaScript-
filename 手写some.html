@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			Array.prototype.mySome=function(fn){
+				//第一步将类数据转化未数组
+				let arr = Array.from(this)
+				let resultArr=[]
+				let result = false
+				for (var i = 0; i < this.length; i++) {
+					if(fn(arr[i])){
+						result = true
+						break
+					}
+				}
+				return result
+			}
+			let result = [1,2,3].mySome(item=>item >5)
+			console.log(result)
+		</script>
+	</body>
+</html>

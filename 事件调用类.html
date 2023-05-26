@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			#box div{
+				width: 100px;
+				height:100px;
+				background-color: red;
+				border:1px solid #0000CC
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div class="aim" data-action="getName">第一</div>
+			<div class="aim" data-action="getAge">第二</div>
+			<div class="aim" data-action="getGender">第三</div>
+		</div>
+		<script type="text/javascript">
+			class HD{
+				constructor(el) {
+				  let target = document.querySelector(el)
+					target.addEventListener("click",(e)=>{
+						this[e.target.dataset.action]()
+					})
+				}
+				getName(){
+					console.log('我的名字叫孙崇洲')
+				}
+				getAge(){
+					console.log('我今年18岁')
+				}
+				getGender(){
+					console.log('我的性别是男性')
+				}
+			}
+			let hd = new HD("#box")
+		</script>
+	</body>
+</html>

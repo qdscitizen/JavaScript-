@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      #container{
+        width:400px;
+        height:400px;
+        border: 1px solid #000000;
+        overflow-y: scroll;
+      }
+      #inner{
+        width:400px;
+        height:450px;
+        background-color: aqua;
+        border: 1px solid #000000;
+      }
+    </style>
+  </head>
+  <body>
+     <input type="file" name="" id="file" value="" onchange="change(event)" />
+  </body>
+
+  <script>
+    let str = 'abbcd'
+    console.log(str.toString())
+  function change(e){
+    let {files} = e.target
+    var reader = new FileReader();
+    reader.readAsDataURL(files[0])
+    reader.onload = function(e){
+      console.log(reader.result)
+      console.log('------------',e)
+      let video = document.createElement("video")
+      video.src = reader.result
+      video.id = 'video'
+      document.body.appendChild(video)
+      video.play()
+      video.addEventListener('loadeddata',() => {
+        const width = video.videoWidth;
+        const height = video.videoHeight;
+      	const duration = video.duration;
+      });
+    }
+  }
+  </script>
+ 
+</html>

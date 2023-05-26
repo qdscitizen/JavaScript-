@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="./css/test.css"/>
+		<style>
+		     
+		  </style>
+	</head>
+	<body>
+		<div id="box">
+			
+		</div>
+		
+	</body>
+	<script type="text/javascript">
+    function Boy(name,age){
+      this.name = name
+      this.age = age
+    }
+	function myNew(fn,...args){
+    let instance = Object.create(fn.prototype)
+    let res = fn.call(instance,...args)
+    return (typeof res === 'function' || typeof res ==='object' )?res:instance    
+  }
+  console.log(myNew(Boy,'sun',18))
+  console.log(new Boy('sun',18))
+	</script>
+</html>

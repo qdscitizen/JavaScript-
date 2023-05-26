@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id='app'>
+      请输入标题:<input type="text" v-model='title' oninput="handleInputKeyUp(this)"/>
+      我是标题：<span id="title"v-bind='title'></span>
+    </div>
+	</body>
+	<script type="text/javascript">
+		let data = {
+			title:""
+		}
+    //1.设置订阅发布器
+    let subscribe = {
+      callbacks:{},
+      trigger(key,...args){       
+     
+        if(!this.callbacks[key]){
+          alert('没有可执行的以来')
+          return
+        }
+         
+        if(this.callbacks[key]){          
+         
+          this.callbacks[key].forEach(callback=>{
+              console.log('执行依赖',callback)
+            callback(...args)
+          })
+        }
+      },
+      dispatch(key,handler){      
+        if(!this.callbacks[key]){
+          this.callbacks[key]=[]
+          this.callbacks[key].push(handler)          
+        }else{
+          this.callbacks[key].push(handler)
+        }
+       
+         console.log('收集依赖',this.callbacks)
+       
+      },
+      removeTrigger(key,handler){
+        if(!this.callbacks[key]){
+          alert('没有可以删除的依赖')
+          
+        }else{
+          this.callback[key]=this.callback[key].filter(callback=> callback !== handler)
+        }
+      }
+    } 
+    collector()
+    //2.先收集一下依赖吧
+    function collector(){
+      let app = document.querySelector("#app")
+      let childs = app.childNodes
+      childs.forEach(child=>{
+        //获取元素节点
+        if(child.nodeType===1){
+          Array.from(child.attributes).forEach(attr=>{
+            let attrLabel = attr.nodeName
+            let attrValue = attr.nodeValue         
+            if(attrLabel==='v-model'){
+              //收集一下依赖
+              subscribe.dispatch(attrValue,()=>{
+                child.value = data[attrValue]
+              })             
+            }
+            if(attrLabel==='v-bind'){
+              //收集一下以来
+              subscribe.dispatch(attrValue,()=>{
+                child.innerHTML = data[attrValue]
+              })             
+            }
+       
+          })
+        }
+      })
+    }
+	   function defineObjectProperty(target){
+			Object.keys(target).forEach(key=>{
+				let value = target[key]
+				Object.defineProperty(target,key,{
+					enumerable:true,
+					configurable:true,
+					get(){
+						console.log('读取',value)
+					   return value
+					},		
+					set(newValue){
+						console.log(`我监听到啦${newValue}`)
+						value = newValue
+            //执行以来
+            subscribe.trigger(key)
+					}
+				})
+			})
+		 }
+		 
+		 defineObjectProperty(data,'title')
+		 function handleInputKeyUp(val){
+			data[val.getAttribute("v-model")] = val.value
+		 }
+	</script>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			let sync1 = data => {
+			  console.log("sync1");
+			  return data;
+			};
+			let sync2 = data => {
+			  console.log("sync2");
+			  return data + 1;
+			};
+			let sync3 = data => {
+			  console.log("sync3");
+			  return data + 2;
+			};
+			
+function compose(list) {
+  // 取出第一个函数，当做reduce函数的初始值
+  const init = list.shift();
+  return function(...arg) {
+    // 执行compose函数，返回一个函数
+    return list.reduce(
+      (pre, cur) => {
+			console.log(pre.then(result => {
+        return 1
+      }))	
+				
+      },
+     
+      Promise.resolve(init.apply(null, arg))
+    );
+  };
+}
+let syncFn = compose([sync1, sync2, sync3]);
+syncFn(0).then(res => {
+  console.log(res);
+});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+      .wrap{
+        width:100%;
+        height:100%;
+        background:#ffffff;
+        overflow:scroll;ssss
+      }
+      .content{
+        width:100%;
+        height:2500px;
+        background-color: bisque;
+        font-size: 50px;
+        font-weight: 600;
+      }
+      .img{
+        width: 100%;
+        height:80px;
+        background: url("loading.gif") center no-repeat;
+        background-size: 80px 80px;
+        position: absolute;
+        top:-100px;
+        left: 0;
+      }
+
+		</style>
+	</head>
+	<body>
+    
+		<div class="wrap">
+      
+      <div class='content'>onPullDownRefresh<div class='img'></div></div>
+		</div>
+		<script type="text/javascript">
+      
+      class uni{
+        
+        constructor(){
+         
+        }
+        static wrap = document.querySelector(".wrap")
+        static content = document.querySelector(".content")
+        static yStart = 0;
+        //是否刷新
+        static isFlush = false
+        static isOpen = true
+        static handleTouchMove = (e)=>{
+          if(uni.wrap.scrollTop===0){
+            if(uni.isOpen){
+              uni.yStart = e.changedTouches[0].clientY
+              uni.isOpen=false
+            }       
+            uni.content.style.position = 'relative'
+            uni.content.style.transition = "all 1s"
+          }
+          let duration = e.changedTouches[0].clientY-uni.yStart
+          if(duration>0 && duration < 150){
+            uni.content.style.top = e.changedTouches[0].clientY-uni.yStart + 'px'
+            uni.isFlush=true
+          }
+          if(duration>=150){
+             uni.content.style.top = 150 + 'px'
+          }
+          console.log('我一直在触摸'+e.changedTouches[0].clientY,uni.yStart)
+        }
+        
+        static handleTouchStart = (e)=>{
+          console.log('我开始触摸了',)
+          if(uni.wrap.scrollTop===0){
+            uni.yStart = e.changedTouches[0].clientY
+            console.log('我触顶啦,我现在的clientY是'+uni.yStart)         
+            uni.content.style.position = 'relative'
+            uni.content.style.transition = "all 1s"
+          }
+        }
+        static handleTouchEnd = (e)=>{
+          console.log('我的触摸结束了',)
+          uni.content.style.top = 0 + 'px' 
+          uni.content.style.transition = "all 2s"
+          uni.content.style.postion = 'static'
+          uni.isOpen=true
+          if(uni.isFlush){
+            alert('触发onPullDownRefresh事件')
+            uni.isFlush=false
+          }
+        }
+        static onPullDownRefresh = ()=>{         
+          try{
+            //scrollTop触顶以后，记录光标位置
+            
+            window.addEventListener('touchstart',uni.handleTouchStart)
+            window.addEventListener('touchend',uni.handleTouchEnd)
+            window.addEventListener('touchmove',uni.handleTouchMove)
+            uni.wrap.addEventListener('scroll',(e)=>{
+              console.log('我在滚动',uni.wrap.scrollTop)
+              if(uni.wrap.scrollTop===0){
+                console.log('我触顶啦,我现在的clientY是'+yStart)
+                uni.content.style.position = 'relative'
+                
+              }
+            })
+          }catch(e){
+           
+          }finally{
+            
+          }
+        }
+      }
+      uni.onPullDownRefresh()
+			// document.body.addEventListener('touchstart',(e)=>{
+   //      console.log('我开始触摸啦',e)
+   //    })
+     
+   //    document.body.addEventListener('touchend',(e)=>{
+   //      console.log('我的移动结束啦',e)
+   //    })
+      //设置一个触顶函数
+      
+      // function handleTouchMove(e){     
+       
+      // }
+      // function handleTouchStart(e){
+        
+      // }
+      // function handleTouchEnd(e){
+        
+      // }
+      
+      
+      
+      
+		</script>
+	</body>
+</html>

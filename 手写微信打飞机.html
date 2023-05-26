@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+		</div>
+		<script type="text/javascript">
+		  class Plane{
+				constructor(el,width,height) {		
+				  this.$el = el				
+					Object.assign(this.$el.style,{
+						width:width +'px',
+						height:height+'px',
+						background:'red',
+						position:'fixed',
+						left:0,
+						bottom:0,
+						background:"url('./img/plane.png') center no-repeat",
+						backgroundSize:"100px 100px"
+					})
+					this.x =0;
+					this.y= document.documentElement.clientHeight - el.offsetHeight;
+					setInterval(()=>{this.createEnemy()},3000)		
+						// this.createEnemy()
+				}
+				move(){
+					window.addEventListener("keydown",e=>{
+						let {x,y} = this.$el.getBoundingClientRect()
+						console.log(x,y)
+						if(window.event.keyCode === 38){
+							console.log('上')
+							this.$el.style.top = y - 10 + 'px'
+							this.createbullet()
+						}
+						if(window.event.keyCode === 40){
+							console.log('下')
+							this.$el.style.top = y + 10 + 'px'
+							this.createbullet()
+						}
+						if(window.event.keyCode === 37){
+							console.log('左')
+							this.$el.style.left = x - 10 + 'px'
+							this.createbullet()
+						}
+						if(window.event.keyCode === 39){
+							console.log('右')
+							this.$el.style.left = x + 10 + 'px'
+							this.createbullet()
+						}
+						this.x = x;
+						this.y = y;
+						
+					})
+				}
+				//产生一颗子弹吧
+				createbullet(){
+					console.log(this.$el.style.width)
+					let bullet = document.createElement('div')
+					bullet.className = "bullet"
+					bullet.style.cssText="width:3px;height:10px;background:green;border-radius:5px"
+					document.body.appendChild(bullet)
+					bullet.style.position='fixed'
+					bullet.style.left =this.$el.offsetLeft + (this.$el.offsetWidth-bullet.offsetWidth) / 2  + "px"
+					bullet.style.top = this.$el.offsetTop - bullet.offsetHeight  + "px"
+					setInterval(()=>{
+					bullet.style.top = bullet.offsetTop - 20 + 'px'
+					if(bullet.offsetTop <= 0){
+						document.body.removeChild(bullet)
+						console.log(1)
+						
+					}
+					},20)
+				}
+				//产生一个敌人
+				createEnemy(){
+					let enemy = document.createElement('div')
+					Object.assign(enemy.style,{
+						width:100 +'px',
+						height:100+'px',
+						background:'red',
+						position:'fixed',
+						left:(Math.random() * window.outerWidth) + (enemy.offsetWidth)/2 + 'px',
+						right:(Math.random() * window.outerWidth) - (enemy.offsetWidth)/2 + 'px',
+						top:'-100px',
+						background:"url('./img/enemy.png') center no-repeat",
+						backgroundSize:"100px 100px"
+					})
+					setInterval(()=>{
+					enemy.style.top = enemy.offsetTop + 2 + 'px'
+					//如果说敌人超出了屏幕底部，就自动删除
+					if(enemy.offsetTop>document.documentElement.clientHeight){
+						document.body.removeChild(enemy)
+					}
+					},20)
+					document.body.appendChild(enemy)
+					//如果敌人和我方战斗机相撞，我方战斗机就爆炸
+					// setInterval(()=>{if((y + enemy.offsetHeight >= this.y)){	
+					// 	console.log(y + enemy.offsetHeight , this.y)
+					// 	alert("我方战斗机爆炸")
+					// }},500)
+					let timer = setInterval(()=>{
+						let {x,y} = enemy.getBoundingClientRect()
+						//上下装
+						if((x >= this.x && x <= this.x + this.$el.offsetHeight) && (y + enemy.offsetHeight >= this.y)
+						){
+							alert('baozha')
+							clearInterval(timer)
+						}
+					},500)
+					
+					//跑的要时候要注意子弹
+					let bullets = document.querySelectorAll('.bullet')
+					console.log(bullets)
+				}
+			}
+			let plane = new Plane(document.querySelector('#app'),100,100)
+			plane.move()
+			console.log(window.outerWidth)
+		</script>
+	</body>
+</html>

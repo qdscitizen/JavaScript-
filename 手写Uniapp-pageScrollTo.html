@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      body{
+        height:800px;
+        overflow-y: scroll;
+      }
+      #box{
+        width:100%;
+        height:2000px
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+  </body>
+  <script>
+  class uni{
+    constructor(){
+      
+    }
+    //结构知识点
+    static pageScrollTo = function({scrollTop,selector,duration,success,fail,complete}){
+      try{
+        var rAFCallback = function(scrollTop,duration){
+            let height =0;
+            let rAF_ID ;
+            const fn =  function(){
+              //一帧大概等于16毫秒
+             height+=parseInt((scrollTop/(duration/16)))
+             selector.scrollTo(0,height)
+             // cancel animation frame after 60px
+             if( height >= scrollTop ) {
+              cancelAnimationFrame(rAF_ID);
+              success()
+             }else {
+             	rAF_ID = requestAnimationFrame(fn);
+             }
+           }
+           return fn
+        }    
+        rAFCallback(scrollTop,duration)()
+      }catch(e){
+        fail && fail()
+      }finally{
+        complete && complete()
+      }
+     
+    }
+  } 
+ 
+let body = document.body
+uni.pageScrollTo({
+  scrollTop:500,
+  selector:body,
+  duration:2000,
+  success:function(){
+    console.log('我已经到达目的地啦')
+  },
+  fail:function(){
+    console.log('我失败啦')
+  },
+  complete:()=>{
+     console.log('我完成啦')
+  }
+})
+  </script>
+</html>

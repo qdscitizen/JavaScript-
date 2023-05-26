@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<style type="text/css">
+	</style>
+	<body>
+	<button id="app" onclick="func()">
+			打开
+	</button>
+	<script type="text/javascript">
+	    let arr = [1,2,3,4,5];
+				Array.prototype.myReduce=function(fn,initialParam){
+					let pre;
+					let arrCopy = arr.slice()
+					if(!initialParam){
+						pre=arr[0]
+					}else{
+						pre=initialParam
+					}
+					arr.forEach((item,index)=>{
+						pre=fn(pre,item,index,arr)
+					})
+					return pre		
+				}
+			let result = arr.myReduce(function(pre,cur,index,arr){
+				  return pre + cur
+			},2)
+			console.log(result)
+			
+	</script>
+
+	</body>
+</html>

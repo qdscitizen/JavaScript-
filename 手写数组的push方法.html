@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+	let arr =[1,2,3,4]
+		Array.prototype.myPush=function(val){
+			let resultArr = this.slice()
+			let Length = this.length
+			this[Length]=val
+			return this.length
+		}
+		arr.push({name:5})
+		console.log(arr)
+	</script>
+</html>

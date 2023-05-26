@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//方法一
+		function handleInstance(child,ancester){
+				if(child.__proto__ === null){
+					return false
+				}else{			
+					if(child.__proto__===ancester.prototype){
+						return true
+					}else{
+						return handleInstance(child.__proto__,ancester)
+					}
+					
+				}			
+			}
+		let obj = {name:"111"}
+		function myInstanceOf(child,ancester){
+				let _proto = child.__proto__			
+				let _prototype=ancester.prototype
+			while(true){		
+				if(_proto===null){
+					return false
+				}
+				if(_proto===_prototype){
+					return true
+				}
+				_proto = _proto.__proto__
+			}
+		}
+		console.log(myInstanceOf(obj,String))
+		</script>
+	</body>
+</html>

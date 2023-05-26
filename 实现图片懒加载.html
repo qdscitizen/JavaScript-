@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+		*{
+		  padding:0;
+			margin:0
+		}
+			#one{
+				width:100%;
+				height:100%;
+			}
+			#two{
+				width:100px;
+				height:100px;
+				background:yellow
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="one" data-sunchongzhou='sunchongzhou'>
+			
+		</div>
+		<script type="text/javascript">
+			//获取浏览器可视区域高度
+		   let height = document.documentElement.clientHeight
+			 //获取暂存的片段
+			 let fragment = document.createDocumentFragment();
+			 for(var i = 0;i<200;i++){
+				 let img = document.createElement('img')
+				 img.width = 150
+				 img.height = 200
+				 img.dataset.src = 'img/ad.jpg'
+				 img.style.margin = 10 + 'px'
+				 fragment.appendChild(img)
+			 }
+			 //将生成的图片放入片段，然后将片段一次性的插入到div
+			 document.querySelector("#one").appendChild(fragment)
+			 let imgs = document.querySelectorAll("img")
+			 lazyLoad()
+			 //懒加载函数
+			 function lazyLoad(){
+				 imgs.forEach(img=>{
+				 	let rect = img.getBoundingClientRect()
+				 	if(rect.bottom >= 0 && rect.top <= height){
+						img.src = img.dataset.src
+				 	}
+				 })
+			 }
+			 //防抖函数
+			 window.onscroll = lazyLoad
+			 function debunnce(func,delay){
+			 			var timer = false;
+			 			return function(){
+			 				if(timer){
+			 					clearTimeout(timer);
+			 				}
+			 				timer = setTimeout(function(){
+			 					func()
+			 				},delay)
+			 			}
+			 		}
+			 		 window.onscroll = debunnce(lazyLoad,100); 
+		</script>
+	</body>
+</html>

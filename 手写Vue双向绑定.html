@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		请输入标题:<input type="text" v-model='title' onchange="handleInputKeyUp(this)"/>
+		我是标题：<span id="title"v-bind='title'></span>
+	</body>
+	<script type="text/javascript">
+		let data = {
+			title:""
+		}
+	   function defineObjectProperty(target){
+			Object.keys(target).forEach(key=>{
+				let value = target[key]
+				Object.defineProperty(target,key,{
+					enumerable:true,
+					configurable:true,
+					get(){
+						console.log('读取',value)
+					   return value
+					},		
+					set(newValue){
+						console.log(`我监听到啦${newValue}`)
+						value = newValue
+						document.querySelector(`[v-bind=${key}]`).innerHTML =newValue
+					}
+				})
+			})
+		 }
+		 
+		 defineObjectProperty(data,'title')
+		 function handleInputKeyUp(val){
+			data[val.getAttribute("v-model")] = val.value
+		 }
+	</script>
+</html>

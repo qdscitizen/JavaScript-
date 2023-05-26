@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+		let obj={}
+			function myInstance(obj,fn){
+				if(obj.__proto__){
+					return obj.__proto__===fn.prototype||	myInstance(obj.__proto__,fn)
+				}else{
+					return false
+				}
+			}
+			console.log(myInstance(obj,Object))
+		</script>
+	</body>
+</html>

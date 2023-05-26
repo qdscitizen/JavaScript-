@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//递归实现深拷贝
+			var person={
+				name:'张三',
+				sex:'男',
+				age:40,
+				hobby:['吃饭','睡觉','打豆豆'],
+				info:{lover:"高爱伟"},
+				children:[
+				{
+					name:'张大炮',
+					sex:'男',
+					age:17,
+					hobby:['打游戏','听歌']
+				},
+				{
+					name:'张如意',
+					sex:'女',
+						age:15,
+						hobby:['学习','跳舞']
+					},
+				]
+			}
+			
+		
+			
+      function deepCopy(obj){
+				let result = {};
+				Object.keys(obj).forEach((key,index)=>{
+					//如果值是对象
+					let val;
+					if(Object.prototype.toString.call(obj[key]) === "[object Object]"){
+						val = {} 
+						for(let i in obj[key]){
+							val[i] = typeof obj[key][i] === 'object'? deepCopy(obj[key][i]):obj[key][i]
+						}
+						result[key] = val
+					}
+					//如果值是数组
+					else if(Object.prototype.toString.call(obj[key]) === "[object Array]"){
+						val = [] 
+						obj[key].forEach(item=>{
+							val.push(typeof item === 'object'?deepCopy(item):item)
+						})
+						result[key] = val
+					}else{
+						//数字，字符串，对象
+						val = obj[key]
+						result[key] = val
+					}
+					
+				})
+				return result;
+			}
+			let newObj = deepCopy(person)
+			newObj.children[0].name='wanglaoshi'
+			console.log('result',newObj)
+		</script>
+	</body>
+</html>
